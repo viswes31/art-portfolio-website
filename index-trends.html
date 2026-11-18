@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soul Canvas | Modern Bohemian Art Commissions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'terracotta': '#C67D5E',
+                        'terracotta-dark': '#A65D3F',
+                        'sage': '#9CAF88',
+                        'sage-light': '#B8C9A9',
+                        'rust': '#B7594E',
+                        'mustard': '#D4A84B',
+                        'cream': '#FDF8F3',
+                        'sand': '#E8DDD4',
+                        'mocha': '#6B5344',
+                        'espresso': '#3D2E24',
+                        'blush': '#E8C4B8',
+                    },
+                    fontFamily: {
+                        'serif': ['Playfair Display', 'serif'],
+                        'sans': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            cursor: none;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDF8F3;
+            overflow-x: hidden;
+        }
+        
+        /* Paper texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.03;
+            z-index: 9999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+        
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* Custom cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #C67D5E;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 99999;
+            transition: transform 0.15s ease, background-color 0.15s ease, width 0.2s ease, height 0.2s ease;
+            transform: translate(-50%, -50%);
+        }
+        
+        .cursor-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #C67D5E;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 99999;
+            transform: translate(-50%, -50%);
+        }
+        
+        .cursor.hover {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(198, 125, 94, 0.1);
+            border-color: #C67D5E;
+        }
+        
+        .cursor.gallery-hover {
+            width: 80px;
+            height: 80px;
+            background-color: rgba(198, 125, 94, 0.9);
+            border: none;
+        }
+        
+        .cursor.gallery-hover::after {
+            content: 'View';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+        
+        /* Kinetic Typography */
+        .kinetic-text span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(100px) rotate(10deg);
+            animation: revealText 0.8s ease forwards;
+        }
+        
+        @keyframes revealText {
+            to {
+                opacity: 1;
+                transform: translateY(0) rotate(0);
+            }
+        }
+        
+        .kinetic-text span:nth-child(1) { animation-delay: 0.1s; }
+        .kinetic-text span:nth-child(2) { animation-delay: 0.2s; }
+        .kinetic-text span:nth-child(3) { animation-delay: 0.3s; }
+        .kinetic-text span:nth-child(4) { animation-delay: 0.4s; }
+        .kinetic-text span:nth-child(5) { animation-delay: 0.5s; }
+        .kinetic-text span:nth-child(6) { animation-delay: 0.6s; }
+        
+        /* Scroll-triggered animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                        transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-60px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .reveal-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .reveal-scale.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Staggered children animation */
+        .stagger-children > * {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .stagger-children.visible > *:nth-child(1) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(2) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(3) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(4) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(5) { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(6) { transition-delay: 0.6s; opacity: 1; transform: translateY(0); }
+        
+        /* Bento grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(3, 280px);
+            gap: 20px;
+        }
+        
+        @media (max-width: 1024px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(5, 250px);
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+            }
+        }
+        
+        .bento-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .bento-item:hover {
+            transform: scale(0.98);
+        }
+        
+        .bento-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .bento-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .bento-item .overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(61, 46, 36, 0.9) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .bento-item:hover .overlay {
+            opacity: 1;
+        }
+        
+        .bento-item .info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 24px;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+        
+        .bento-item:hover .info {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        /* Large bento items */
+        .bento-large {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+        
+        .bento-wide {
+            grid-column: span 2;
+        }
+        
+        .bento-tall {
+            grid-row: span 2;
+        }
+        
+        /* Micro-interactions - Buttons */
+        .btn-primary {
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(198, 125, 94, 0.4);
+        }
+        
+        .btn-primary:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+        
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+        
+        /* Magnetic button effect */
+        .magnetic {
+            transition: transform 0.3s ease;
+        }
+        
+        /* Navbar */
+        .navbar {
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .navbar.scrolled {
+            background: rgba(253, 248, 243, 0.9);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(107, 83, 68, 0.1);
+        }
+        
+        /* Floating shapes */
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        .floating-slow {
+            animation: floatSlow 8s ease-in-out infinite;
+        }
+        
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(-5deg); }
+        }
+        
+        /* Marquee */
+        .marquee {
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        
+        .marquee-content {
+            display: inline-flex;
+            animation: marquee 30s linear infinite;
+        }
+        
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        /* Counter animation */
+        .counter {
+            font-variant-numeric: tabular-nums;
+        }
+        
+        /* Smooth image reveal */
+        .img-reveal {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .img-reveal::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: #E8DDD4;
+            transform: scaleX(1);
+            transform-origin: right;
+            transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        
+        .img-reveal.visible::after {
+            transform: scaleX(0);
+        }
+        
+        /* Horizontal scroll section */
+        .horizontal-scroll {
+            display: flex;
+            gap: 40px;
+            padding: 40px 0;
+        }
+        
+        /* Process timeline */
+        .timeline-item {
+            position: relative;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 80px;
+            width: 2px;
+            height: calc(100% - 80px);
+            background: linear-gradient(to bottom, #C67D5E, transparent);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item:last-child::before {
+            display: none;
+        }
+        
+        /* Testimonial card */
+        .testimonial-card {
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-10px) rotate(-1deg);
+            box-shadow: 0 30px 60px rgba(107, 83, 68, 0.15);
+        }
+        
+        /* Form inputs */
+        .form-input {
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+        }
+        
+        .form-input:focus {
+            border-color: #C67D5E;
+            box-shadow: 0 0 0 4px rgba(198, 125, 94, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        /* Sticky CTA for mobile */
+        .sticky-cta {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px 24px;
+            background: rgba(253, 248, 243, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(198, 125, 94, 0.2);
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+            z-index: 100;
+        }
+        
+        .sticky-cta.visible {
+            transform: translateY(0);
+        }
+        
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #C67D5E 0%, #D4A84B 50%, #9CAF88 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Blob shapes */
+        .blob {
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        }
+        
+        /* Dark section texture */
+        .dark-texture {
+            background-color: #3D2E24;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #FDF8F3;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #C67D5E, #D4A84B);
+            border-radius: 5px;
+        }
+        
+        /* Lightbox */
+        .lightbox {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+        
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .lightbox-content {
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .lightbox.active .lightbox-content {
+            transform: scale(1) translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-cream text-espresso">
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursor-dot"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar fixed top-0 left-0 right-0 z-50 py-6 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-3 magnetic" data-magnetic>
+                <div class="w-10 h-10 bg-terracotta rounded-full flex items-center justify-center">
+                    <span class="text-cream font-serif text-lg">S</span>
+                </div>
+                <span class="font-serif text-xl text-espresso hidden sm:block">Soul Canvas</span>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#gallery" class="text-mocha hover:text-terracotta transition-colors relative group magnetic" data-magnetic>
+                    Portfolio
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-terracotta transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#about" class="text-mocha hover:text-terracotta transition-colors relative group magnetic" data-magnetic>
+                    About
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-terracotta transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#process" class="text-mocha hover:text-terracotta transition-colors relative group magnetic" data-magnetic>
+                    Process
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-terracotta transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#pricing" class="text-mocha hover:text-terracotta transition-colors relative group magnetic" data-magnetic>
+                    Pricing
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-terracotta transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#contact" class="btn-primary bg-terracotta text-cream px-6 py-3 rounded-full text-sm font-medium magnetic" data-magnetic data-hover>
+                    Commission Art
+                </a>
+            </div>
+            
+            <button class="md:hidden w-10 h-10 flex flex-col justify-center items-center space-y-1.5" id="menu-toggle">
+                <span class="w-6 h-0.5 bg-espresso transition-all"></span>
+                <span class="w-6 h-0.5 bg-espresso transition-all"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center relative pt-24 overflow-hidden">
+        <!-- Floating shapes -->
+        <div class="absolute top-32 right-20 w-72 h-72 bg-terracotta/10 blob floating-slow"></div>
+        <div class="absolute bottom-40 left-10 w-48 h-48 bg-sage/20 blob floating"></div>
+        <div class="absolute top-1/2 right-1/3 w-24 h-24 bg-mustard/15 rounded-full floating"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 md:px-12 w-full">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="order-2 lg:order-1">
+                    <div class="overflow-hidden mb-6">
+                        <p class="text-terracotta text-sm tracking-[0.3em] uppercase reveal">Bespoke Art Commissions</p>
+                    </div>
+                    
+                    <h1 class="font-serif text-5xl md:text-6xl lg:text-7xl leading-[1.1] mb-8 kinetic-text">
+                        <span>Art</span> <span>that</span> <span>speaks</span><br>
+                        <span>to</span> <span>your</span> <span class="italic text-terracotta">soul</span>
+                    </h1>
+                    
+                    <p class="text-mocha text-lg md:text-xl leading-relaxed mb-10 max-w-lg reveal" style="transition-delay: 0.4s;">
+                        Handcrafted bohemian artwork infused with warmth, nature, and the stories that make your life beautiful.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 reveal" style="transition-delay: 0.6s;">
+                        <a href="#gallery" class="btn-primary bg-terracotta text-cream px-8 py-4 rounded-full font-medium text-center magnetic" data-magnetic data-hover>
+                            Explore Collection
+                        </a>
+                        <a href="#contact" class="border-2 border-espresso text-espresso px-8 py-4 rounded-full font-medium text-center hover:bg-espresso hover:text-cream transition-all magnetic" data-magnetic data-hover>
+                            Start Your Journey
+                        </a>
+                    </div>
+                    
+                    <!-- Mini stats -->
+                    <div class="flex items-center space-x-8 mt-16 reveal" style="transition-delay: 0.8s;">
+                        <div>
+                            <p class="font-serif text-4xl text-terracotta counter" data-target="150">0</p>
+                            <p class="text-sm text-mocha">Happy Clients</p>
+                        </div>
+                        <div class="w-px h-12 bg-sand"></div>
+                        <div>
+                            <p class="font-serif text-4xl text-sage counter" data-target="8">0</p>
+                            <p class="text-sm text-mocha">Years Creating</p>
+                        </div>
+                        <div class="w-px h-12 bg-sand"></div>
+                        <div>
+                            <p class="font-serif text-4xl text-mustard">∞</p>
+                            <p class="text-sm text-mocha">Love Poured</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-1 lg:order-2 relative">
+                    <div class="relative img-reveal">
+                        <img 
+                            src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&q=80" 
+                            alt="Featured artwork" 
+                            class="w-full h-[500px] lg:h-[600px] object-cover rounded-[40px]"
+                        >
+                        <!-- Decorative frame -->
+                        <div class="absolute -top-4 -right-4 w-full h-full border-2 border-terracotta/30 rounded-[40px] -z-10"></div>
+                    </div>
+                    
+                    <!-- Floating badge -->
+                    <div class="absolute -bottom-6 -left-6 bg-cream p-6 rounded-2xl shadow-xl floating">
+                        <p class="text-sm text-mocha mb-1">Latest Commission</p>
+                        <p class="font-serif text-lg text-espresso">"Eternal Bloom"</p>
+                        <div class="flex mt-2">
+                            <span class="text-mustard">★★★★★</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center">
+            <span class="text-xs text-mocha tracking-widest uppercase mb-2">Scroll to explore</span>
+            <div class="w-6 h-10 border-2 border-mocha/30 rounded-full flex justify-center pt-2">
+                <div class="w-1.5 h-3 bg-terracotta rounded-full animate-bounce"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marquee Section -->
+    <section class="py-8 bg-sand overflow-hidden">
+        <div class="marquee">
+            <div class="marquee-content">
+                <span class="text-xl md:text-2xl font-serif text-mocha/60 mx-8">Portraits</span>
+                <span class="text-terracotta mx-4">✦</span>
+                <span class="text-xl md:text-2xl font-serif text-mocha/60 mx-8">Landscapes</span>
+                <span class="text-sage mx-4">✦</span>
+                <span class="text-xl md:text-2xl font-serif text-mocha/60 mx-8">Abstract</span>
+                <span class="text-mustard mx-4">✦</span>
+                <span class="text-xl md:text-2xl font-serif text-mocha/60 mx-8">Botanical</span>
+                <span class="text-terracotta mx-4">✦</span>
+                <span class="text-xl md:text-2xl font-serif text-mocha/60 mx-8">Pet Portraits</span>
+                <span class="text-sage mx-4">✦</span>
+                <span class="text-xl md:text-2xl font-serif text-mocha/60 mx-8">Commissions</span>
+                <span class="text-mustard mx-4">✦</span>
+                <!-- Duplicate for seamless loop -->
+                <span class="text-xl md:text-2xl font-serif text-mocha/60 mx-8">Portraits</span>
+                <span class="text-terracotta mx-4">✦</span>
+                <span class="text-xl md:text-2xl font-serif text-mocha/60 mx-8">Landscapes</span>
+                <span class="text-sage mx-4">✦</span>
+                <span class="text-xl md:text-2xl font-serif text-mocha/60 mx-8">Abstract</span>
+                <span class="text-mustard mx-4">✦</span>
+                <span class="text-xl md:text-2xl font-serif text-mocha/60 mx-8">Botanical</span>
+                <span class="text-terracotta mx-4">✦</span>
+                <span class="text-xl md:text-2xl font-serif text-mocha/60 mx-8">Pet Portraits</span>
+                <span class="text-sage mx-4">✦</span>
+                <span class="text-xl md:text-2xl font-serif text-mocha/60 mx-8">Commissions</span>
+                <span class="text-mustard mx-4">✦</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bento Gallery Section -->
+    <section id="gallery" class="py-24 md:py-32 bg-cream">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="text-center mb-16">
+                <p class="text-terracotta text-sm tracking-[0.3em] uppercase mb-4 reveal">Portfolio</p>
+                <h2 class="font-serif text-4xl md:text-5xl lg:text-6xl reveal" style="transition-delay: 0.1s;">
+                    Soulful <span class="italic gradient-text">Creations</span>
+                </h2>
+                <p class="text-mocha mt-4 max-w-xl mx-auto reveal" style="transition-delay: 0.2s;">
+                    Each piece carries a story, an emotion, a piece of someone's heart transformed into art.
+                </p>
+            </div>
+            
+            <!-- Bento Grid -->
+            <div class="bento-grid stagger-children">
+                <!-- Large featured item -->
+                <div class="bento-item bento-large reveal-scale" data-gallery onclick="openLightbox(0)">
+                    <img src="https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=1200&q=80" alt="Wild Spirit">
+                    <div class="overlay"></div>
+                    <div class="info text-cream">
+                        <p class="text-sm text-terracotta mb-1">Featured</p>
+                        <h3 class="font-serif text-2xl mb-1">Wild Spirit</h3>
+                        <p class="text-sm opacity-80">Portrait • Acrylic on Canvas • 24"×36"</p>
+                    </div>
+                </div>
+                
+                <!-- Regular items -->
+                <div class="bento-item reveal-scale" data-gallery onclick="openLightbox(1)">
+                    <img src="https://images.unsplash.com/photo-1549289524-06cf8837ace5?w=600&q=80" alt="Desert Dreams">
+                    <div class="overlay"></div>
+                    <div class="info text-cream">
+                        <h3 class="font-serif text-xl mb-1">Desert Dreams</h3>
+                        <p class="text-sm opacity-80">Landscape • Mixed Media</p>
+                    </div>
+                </div>
+                
+                <div class="bento-item reveal-scale" data-gallery onclick="openLightbox(2)">
+                    <img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=600&q=80" alt="Autumn Whispers">
+                    <div class="overlay"></div>
+                    <div class="info text-cream">
+                        <h3 class="font-serif text-xl mb-1">Autumn Whispers</h3>
+                        <p class="text-sm opacity-80">Abstract • Oil</p>
+                    </div>
+                </div>
+                
+                <!-- Tall item -->
+                <div class="bento-item bento-tall reveal-scale" data-gallery onclick="openLightbox(3)">
+                    <img src="https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?w=600&q=80" alt="Gentle Soul">
+                    <div class="overlay"></div>
+                    <div class="info text-cream">
+                        <h3 class="font-serif text-xl mb-1">Gentle Soul</h3>
+                        <p class="text-sm opacity-80">Portrait • Watercolor</p>
+                    </div>
+                </div>
+                
+                <!-- Wide item -->
+                <div class="bento-item bento-wide reveal-scale" data-gallery onclick="openLightbox(4)">
+                    <img src="https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=1200&q=80" alt="Moonlit Garden">
+                    <div class="overlay"></div>
+                    <div class="info text-cream">
+                        <h3 class="font-serif text-xl mb-1">Moonlit Garden</h3>
+                        <p class="text-sm opacity-80">Botanical • Gouache</p>
+                    </div>
+                </div>
+                
+                <div class="bento-item reveal-scale" data-gallery onclick="openLightbox(5)">
+                    <img src="https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=600&q=80" alt="Earth Mother">
+                    <div class="overlay"></div>
+                    <div class="info text-cream">
+                        <h3 class="font-serif text-xl mb-1">Earth Mother</h3>
+                        <p class="text-sm opacity-80">Abstract • Acrylic</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12 reveal">
+                <a href="#" class="inline-flex items-center space-x-2 text-terracotta font-medium hover:underline magnetic" data-magnetic data-hover>
+                    <span>View Full Collection</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 md:py-32 bg-sand">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="relative reveal-left">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-4">
+                            <div class="img-reveal rounded-3xl overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=600&q=80" alt="Artist" class="w-full h-64 object-cover">
+                            </div>
+                            <div class="img-reveal rounded-3xl overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&q=80" alt="Studio" class="w-full h-48 object-cover">
+                            </div>
+                        </div>
+                        <div class="space-y-4 pt-8">
+                            <div class="img-reveal rounded-3xl overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=600&q=80" alt="Process" class="w-full h-48 object-cover">
+                            </div>
+                            <div class="img-reveal rounded-3xl overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=600&q=80" alt="Art" class="w-full h-64 object-cover">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Decorative -->
+                    <div class="absolute -bottom-8 -left-8 w-32 h-32 bg-terracotta/10 rounded-full -z-10 floating"></div>
+                </div>
+                
+                <div class="reveal">
+                    <p class="text-terracotta text-sm tracking-[0.3em] uppercase mb-4">The Artist</p>
+                    <h2 class="font-serif text-4xl md:text-5xl mb-6">
+                        Creating from the <span class="italic text-terracotta">heart</span>
+                    </h2>
+                    <div class="w-20 h-1 bg-gradient-to-r from-terracotta to-mustard rounded mb-8"></div>
+                    <p class="text-mocha leading-relaxed mb-6">
+                        Hello, beautiful soul! I'm an artist who believes that every brushstroke carries energy, every color tells a story, and every piece of art is a portal to emotions we sometimes can't put into words.
+                    </p>
+                    <p class="text-mocha leading-relaxed mb-8">
+                        My bohemian-inspired work draws from nature's palette—the rust of autumn leaves, the sage of morning meadows, the warm terracotta of sunset skies.
+                    </p>
+                    
+                    <a href="#" class="inline-flex items-center space-x-2 text-terracotta font-medium hover:underline magnetic" data-magnetic data-hover>
+                        <span>Read My Story</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section id="process" class="py-24 md:py-32 dark-texture text-cream relative overflow-hidden">
+        <!-- Decorative circles -->
+        <div class="absolute top-20 left-10 w-64 h-64 border border-cream/10 rounded-full"></div>
+        <div class="absolute bottom-20 right-10 w-48 h-48 border border-cream/10 rounded-full"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+            <div class="text-center mb-20">
+                <p class="text-terracotta text-sm tracking-[0.3em] uppercase mb-4 reveal">The Journey</p>
+                <h2 class="font-serif text-4xl md:text-5xl lg:text-6xl reveal" style="transition-delay: 0.1s;">
+                    How the <span class="italic text-terracotta">magic</span> happens
+                </h2>
+            </div>
+            
+            <div class="grid md:grid-cols-4 gap-8 stagger-children">
+                <div class="text-center">
+                    <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-terracotta/20 flex items-center justify-center relative">
+                        <span class="font-serif text-3xl text-terracotta">1</span>
+                        <div class="absolute top-full left-1/2 w-px h-8 bg-gradient-to-b from-terracotta/50 to-transparent hidden md:block"></div>
+                    </div>
+                    <h3 class="font-serif text-xl mb-3">Connect</h3>
+                    <p class="text-cream/70 text-sm leading-relaxed">We begin with a heart-to-heart about your vision and story.</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-sage/20 flex items-center justify-center">
+                        <span class="font-serif text-3xl text-sage">2</span>
+                    </div>
+                    <h3 class="font-serif text-xl mb-3">Create</h3>
+                    <p class="text-cream/70 text-sm leading-relaxed">Concept sketches and color palettes crafted for your approval.</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-mustard/20 flex items-center justify-center">
+                        <span class="font-serif text-3xl text-mustard">3</span>
+                    </div>
+                    <h3 class="font-serif text-xl mb-3">Craft</h3>
+                    <p class="text-cream/70 text-sm leading-relaxed">Your piece comes to life with regular progress updates.</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-blush/20 flex items-center justify-center">
+                        <span class="font-serif text-3xl text-blush">4</span>
+                    </div>
+                    <h3 class="font-serif text-xl mb-3">Cherish</h3>
+                    <p class="text-cream/70 text-sm leading-relaxed">Beautifully wrapped and delivered to your doorstep.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-24 md:py-32 bg-cream">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="text-center mb-16">
+                <p class="text-terracotta text-sm tracking-[0.3em] uppercase mb-4 reveal">Investment</p>
+                <h2 class="font-serif text-4xl md:text-5xl lg:text-6xl reveal" style="transition-delay: 0.1s;">
+                    Soulful <span class="italic gradient-text">Offerings</span>
+                </h2>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 stagger-children">
+                <!-- Seed -->
+                <div class="bg-sand rounded-[32px] p-8 text-center transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+                    <div class="w-16 h-16 bg-sage/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8 text-sage" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-2">Seed</h3>
+                    <p class="text-mocha text-sm mb-4">Small Canvas • Up to 12"×16"</p>
+                    <p class="font-serif text-5xl text-espresso mb-2">₹12,000</p>
+                    <p class="text-sm text-mocha/60 mb-6">2 week turnaround</p>
+                    <ul class="text-mocha text-sm space-y-3 mb-8 text-left">
+                        <li class="flex items-center"><span class="w-2 h-2 bg-sage rounded-full mr-3"></span>Single subject focus</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-sage rounded-full mr-3"></span>2 revision rounds</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-sage rounded-full mr-3"></span>Digital preview</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-sage rounded-full mr-3"></span>Certificate included</li>
+                    </ul>
+                    <a href="#contact" class="block w-full border-2 border-sage text-sage py-3 rounded-full font-medium hover:bg-sage hover:text-cream transition-all magnetic" data-magnetic data-hover>
+                        Begin Journey
+                    </a>
+                </div>
+                
+                <!-- Bloom - Featured -->
+                <div class="bg-terracotta rounded-[32px] p-8 text-center text-cream relative transform md:-translate-y-4 shadow-2xl">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-mustard text-espresso text-xs px-4 py-1 rounded-full font-medium">
+                        Most Loved
+                    </div>
+                    <div class="w-16 h-16 bg-cream/20 rounded-full flex items-center justify-center mx-auto mb-6 mt-2">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-2">Bloom</h3>
+                    <p class="text-cream/80 text-sm mb-4">Medium Canvas • Up to 20"×24"</p>
+                    <p class="font-serif text-5xl mb-2">₹28,000</p>
+                    <p class="text-sm text-cream/60 mb-6">4 week turnaround</p>
+                    <ul class="text-cream/90 text-sm space-y-3 mb-8 text-left">
+                        <li class="flex items-center"><span class="w-2 h-2 bg-mustard rounded-full mr-3"></span>Multiple subjects</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-mustard rounded-full mr-3"></span>3 revision rounds</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-mustard rounded-full mr-3"></span>Video progress updates</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-mustard rounded-full mr-3"></span>Premium framing option</li>
+                    </ul>
+                    <a href="#contact" class="block w-full bg-cream text-terracotta py-3 rounded-full font-medium hover:bg-mustard hover:text-espresso transition-all magnetic" data-magnetic data-hover>
+                        Begin Journey
+                    </a>
+                </div>
+                
+                <!-- Flourish -->
+                <div class="bg-sand rounded-[32px] p-8 text-center transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+                    <div class="w-16 h-16 bg-mustard/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8 text-mustard" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-2">Flourish</h3>
+                    <p class="text-mocha text-sm mb-4">Large Canvas • Up to 30"×40"</p>
+                    <p class="font-serif text-5xl text-espresso mb-2">₹55,000</p>
+                    <p class="text-sm text-mocha/60 mb-6">6-8 week turnaround</p>
+                    <ul class="text-mocha text-sm space-y-3 mb-8 text-left">
+                        <li class="flex items-center"><span class="w-2 h-2 bg-mustard rounded-full mr-3"></span>Complex compositions</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-mustard rounded-full mr-3"></span>Unlimited revisions</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-mustard rounded-full mr-3"></span>Behind-the-scenes video</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-mustard rounded-full mr-3"></span>White-glove delivery</li>
+                    </ul>
+                    <a href="#contact" class="block w-full border-2 border-mustard text-mustard py-3 rounded-full font-medium hover:bg-mustard hover:text-cream transition-all magnetic" data-magnetic data-hover>
+                        Begin Journey
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-24 md:py-32 bg-sand overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="text-center mb-16">
+                <p class="text-terracotta text-sm tracking-[0.3em] uppercase mb-4 reveal">Love Notes</p>
+                <h2 class="font-serif text-4xl md:text-5xl reveal" style="transition-delay: 0.1s;">
+                    Words from the <span class="italic text-terracotta">heart</span>
+                </h2>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 stagger-children">
+                <div class="testimonial-card bg-cream rounded-[32px] p-8">
+                    <div class="text-mustard text-2xl mb-4">★★★★★</div>
+                    <p class="text-mocha leading-relaxed mb-6 italic">"The painting of my late grandmother brought tears to my eyes—it's like she's here with us again. Absolutely magical work."</p>
+                    <div class="flex items-center">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80" alt="Meera" class="w-12 h-12 rounded-full object-cover mr-4 border-2 border-terracotta">
+                        <div>
+                            <p class="font-medium text-espresso">Meera Kapoor</p>
+                            <p class="text-mocha text-sm">Portrait Commission</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card bg-cream rounded-[32px] p-8">
+                    <div class="text-mustard text-2xl mb-4">★★★★★</div>
+                    <p class="text-mocha leading-relaxed mb-6 italic">"The abstract piece for our new home is stunning. The earthy, grounding tones are exactly what we wanted. It's the soul of our living room."</p>
+                    <div class="flex items-center">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="Arjun" class="w-12 h-12 rounded-full object-cover mr-4 border-2 border-sage">
+                        <div>
+                            <p class="font-medium text-espresso">Arjun & Priya</p>
+                            <p class="text-mocha text-sm">Abstract Commission</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card bg-cream rounded-[32px] p-8">
+                    <div class="text-mustard text-2xl mb-4">★★★★★</div>
+                    <p class="text-mocha leading-relaxed mb-6 italic">"I commissioned a landscape of our engagement beach. Every time I look at it, I'm transported back to that magical sunset."</p>
+                    <div class="flex items-center">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80" alt="Neha" class="w-12 h-12 rounded-full object-cover mr-4 border-2 border-mustard">
+                        <div>
+                            <p class="font-medium text-espresso">Neha Sharma</p>
+                            <p class="text-mocha text-sm">Landscape Commission</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 md:py-32 dark-texture text-cream relative overflow-hidden">
+        <div class="absolute inset-0 opacity-5">
+            <div class="absolute top-10 left-10 w-96 h-96 border border-cream rounded-full"></div>
+            <div class="absolute bottom-10 right-10 w-64 h-64 border border-cream rounded-full"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-16">
+                <div class="reveal-left">
+                    <p class="text-terracotta text-sm tracking-[0.3em] uppercase mb-4">Let's Create</p>
+                    <h2 class="font-serif text-4xl md:text-5xl mb-6">
+                        Ready to bring your <span class="italic text-terracotta">vision</span> to life?
+                    </h2>
+                    <div class="w-20 h-1 bg-gradient-to-r from-terracotta to-mustard rounded mb-8"></div>
+                    <p class="text-cream/70 leading-relaxed mb-8">
+                        I'd love to hear your story. Fill out the form, and I'll reach out within 24 hours to start our creative journey together.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-terracotta/20 rounded-full flex items-center justify-center mr-4">
+                                <svg class="w-5 h-5 text-terracotta" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm text-cream/50">WhatsApp</p>
+                                <p>+91 98765 43210</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-sage/20 rounded-full flex items-center justify-center mr-4">
+                                <svg class="w-5 h-5 text-sage" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z"/>
+                                    <circle cx="12" cy="12" r="3.5"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm text-cream/50">Instagram</p>
+                                <p>@soulcanvas.art</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="reveal">
+                    <form class="bg-mocha/30 rounded-[32px] p-8 space-y-6" id="contact-form">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm text-cream/70 mb-2">First Name</label>
+                                <input type="text" class="form-input w-full bg-espresso/50 border border-mocha/50 rounded-xl px-4 py-3 text-cream placeholder-cream/30 outline-none" placeholder="Your name" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-cream/70 mb-2">Email</label>
+                                <input type="email" class="form-input w-full bg-espresso/50 border border-mocha/50 rounded-xl px-4 py-3 text-cream placeholder-cream/30 outline-none" placeholder="you@email.com" required>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm text-cream/70 mb-2">WhatsApp Number</label>
+                            <input type="tel" class="form-input w-full bg-espresso/50 border border-mocha/50 rounded-xl px-4 py-3 text-cream placeholder-cream/30 outline-none" placeholder="+91 98765 43210">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm text-cream/70 mb-2">Art Style</label>
+                            <select class="form-input w-full bg-espresso/50 border border-mocha/50 rounded-xl px-4 py-3 text-cream outline-none">
+                                <option value="">Select style...</option>
+                                <option>Portrait</option>
+                                <option>Landscape</option>
+                                <option>Abstract</option>
+                                <option>Botanical</option>
+                                <option>Pet Portrait</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm text-cream/70 mb-2">Your Vision</label>
+                            <textarea rows="4" class="form-input w-full bg-espresso/50 border border-mocha/50 rounded-xl px-4 py-3 text-cream placeholder-cream/30 outline-none resize-none" placeholder="Tell me about your dream piece..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary w-full bg-terracotta text-cream py-4 rounded-full font-medium magnetic" data-magnetic data-hover>
+                            Send Message ✨
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-espresso border-t border-mocha/30">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center space-x-3 mb-6 md:mb-0">
+                <div class="w-8 h-8 bg-terracotta rounded-full flex items-center justify-center">
+                    <span class="text-cream font-serif">S</span>
+                </div>
+                <span class="font-serif text-lg text-cream">Soul Canvas</span>
+            </div>
+            
+            <div class="flex space-x-4">
+                <a href="#" class="w-10 h-10 bg-mocha/30 rounded-full flex items-center justify-center text-cream/70 hover:bg-terracotta hover:text-cream transition-all magnetic" data-magnetic data-hover>
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z"/><circle cx="12" cy="12" r="3.5"/><circle cx="18.406" cy="5.594" r="1.44"/></svg>
+                </a>
+                <a href="#" class="w-10 h-10 bg-mocha/30 rounded-full flex items-center justify-center text-cream/70 hover:bg-terracotta hover:text-cream transition-all magnetic" data-magnetic data-hover>
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+                </a>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 md:px-12 mt-8 pt-8 border-t border-mocha/30 text-center">
+            <p class="text-cream/50 text-sm">© 2024 Soul Canvas. Made with ♥ and a lot of chai.</p>
+        </div>
+    </footer>
+
+    <!-- Sticky Mobile CTA -->
+    <div class="sticky-cta md:hidden" id="sticky-cta">
+        <a href="#contact" class="btn-primary block w-full bg-terracotta text-cream py-4 rounded-full font-medium text-center">
+            Commission Art ✨
+        </a>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox fixed inset-0 bg-espresso/95 z-[200] flex items-center justify-center p-4" id="lightbox">
+        <button class="absolute top-6 right-6 text-cream hover:text-terracotta transition-colors" onclick="closeLightbox()">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+        <div class="lightbox-content max-w-4xl w-full">
+            <img src="" alt="" class="w-full max-h-[80vh] object-contain rounded-2xl" id="lightbox-img">
+        </div>
+    </div>
+
+    <script>
+        // Gallery data
+        const galleryItems = [
+            'https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=1400&q=80',
+            'https://images.unsplash.com/photo-1549289524-06cf8837ace5?w=1400&q=80',
+            'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=1400&q=80',
+            'https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?w=1400&q=80',
+            'https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=1400&q=80',
+            'https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=1400&q=80'
+        ];
+
+        // Custom cursor
+        const cursor = document.getElementById('cursor');
+        const cursorDot = document.getElementById('cursor-dot');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            cursorDot.style.left = e.clientX + 'px';
+            cursorDot.style.top = e.clientY + 'px';
+        });
+
+        // Cursor hover effects
+        document.querySelectorAll('[data-hover]').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        document.querySelectorAll('[data-gallery]').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.classList.add('gallery-hover');
+                cursorDot.style.opacity = '0';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.classList.remove('gallery-hover');
+                cursorDot.style.opacity = '1';
+            });
+        });
+
+        // Navbar scroll
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Scroll reveal animations
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-scale, .stagger-children, .img-reveal').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // Counter animation
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target;
+                    const target = parseInt(counter.dataset.target);
+                    let current = 0;
+                    const increment = target / 50;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            counter.textContent = target + '+';
+                            clearInterval(timer);
+                        } else {
+                            counter.textContent = Math.floor(current);
+                        }
+                    }, 30);
+                    counterObserver.unobserve(counter);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.counter[data-target]').forEach(el => {
+            counterObserver.observe(el);
+        });
+
+        // Sticky CTA
+        const stickyCta = document.getElementById('sticky-cta');
+        const contactSection = document.getElementById('contact');
+        
+        window.addEventListener('scroll', () => {
+            const heroHeight = window.innerHeight;
+            const contactTop = contactSection.getBoundingClientRect().top;
+            
+            if (window.scrollY > heroHeight && contactTop > window.innerHeight) {
+                stickyCta.classList.add('visible');
+            } else {
+                stickyCta.classList.remove('visible');
+            }
+        });
+
+        // Lightbox
+        function openLightbox(index) {
+            document.getElementById('lightbox-img').src = galleryItems[index];
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('lightbox')) closeLightbox();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        // Form
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you! ✨ This is a demo form.');
+        });
+
+        // Hide cursor on mobile
+        if ('ontouchstart' in window) {
+            cursor.style.display = 'none';
+            cursorDot.style.display = 'none';
+            document.body.style.cursor = 'auto';
+        }
+    </script>
+</body>
+</html>
