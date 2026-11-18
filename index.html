@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aria Studio | Bespoke Art Commissions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#FAF8F5',
+                        charcoal: '#2D2D2D',
+                        gold: '#C9A962',
+                        'gold-light': '#E8D5A3',
+                        'soft-gray': '#8B8680',
+                        'warm-white': '#FEFDFB',
+                    },
+                    fontFamily: {
+                        'serif': ['Cormorant Garamond', 'serif'],
+                        'sans': ['DM Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: #FAF8F5;
+            overflow-x: hidden;
+        }
+        
+        .font-serif {
+            font-family: 'Cormorant Garamond', serif;
+        }
+        
+        /* Smooth fade-in animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .fade-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        
+        .fade-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .fade-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        
+        .fade-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        /* Hero image parallax effect */
+        .parallax {
+            transform: translateY(0);
+            transition: transform 0.1s linear;
+        }
+        
+        /* Gallery hover effect */
+        .gallery-item {
+            overflow: hidden;
+        }
+        
+        .gallery-item img {
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.08);
+        }
+        
+        .gallery-overlay {
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+        
+        /* Button hover effect */
+        .btn-primary {
+            position: relative;
+            overflow: hidden;
+            transition: color 0.4s ease;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: #2D2D2D;
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+        
+        .btn-primary:hover::before {
+            left: 0;
+        }
+        
+        .btn-primary:hover {
+            color: #FAF8F5;
+        }
+        
+        /* Navbar transition */
+        .navbar {
+            transition: background-color 0.3s ease, backdrop-filter 0.3s ease, padding 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            background-color: rgba(250, 248, 245, 0.95);
+            backdrop-filter: blur(10px);
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #FAF8F5;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #C9A962;
+            border-radius: 4px;
+        }
+        
+        /* Testimonial cards */
+        .testimonial-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Form focus states */
+        .form-input:focus {
+            outline: none;
+            border-color: #C9A962;
+            box-shadow: 0 0 0 3px rgba(201, 169, 98, 0.1);
+        }
+        
+        /* Loading animation for hero */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .hero-animate {
+            animation: fadeInUp 1s ease-out forwards;
+        }
+        
+        .hero-animate-delay-1 {
+            animation-delay: 0.2s;
+            opacity: 0;
+        }
+        
+        .hero-animate-delay-2 {
+            animation-delay: 0.4s;
+            opacity: 0;
+        }
+        
+        .hero-animate-delay-3 {
+            animation-delay: 0.6s;
+            opacity: 0;
+        }
+        
+        /* Signature line animation */
+        @keyframes drawLine {
+            from {
+                width: 0;
+            }
+            to {
+                width: 80px;
+            }
+        }
+        
+        .signature-line {
+            animation: drawLine 1s ease-out 0.8s forwards;
+            width: 0;
+        }
+        
+        /* Lightbox */
+        .lightbox {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .lightbox-content {
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .lightbox.active .lightbox-content {
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body class="bg-cream text-charcoal">
+
+    <!-- Navigation -->
+    <nav class="navbar fixed top-0 left-0 right-0 z-50 py-6 px-8 md:px-16">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="#" class="font-serif text-2xl md:text-3xl font-medium tracking-wide text-charcoal">
+                Aria <span class="text-gold">Studio</span>
+            </a>
+            <div class="hidden md:flex items-center space-x-12">
+                <a href="#about" class="text-soft-gray hover:text-charcoal transition-colors duration-300 text-sm tracking-widest uppercase">About</a>
+                <a href="#portfolio" class="text-soft-gray hover:text-charcoal transition-colors duration-300 text-sm tracking-widest uppercase">Portfolio</a>
+                <a href="#process" class="text-soft-gray hover:text-charcoal transition-colors duration-300 text-sm tracking-widest uppercase">Process</a>
+                <a href="#contact" class="btn-primary border border-charcoal px-6 py-3 text-sm tracking-widest uppercase relative z-10">
+                    Commission
+                </a>
+            </div>
+            <button class="md:hidden text-charcoal" id="mobile-menu-btn">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="fixed inset-0 bg-cream z-40 transform translate-x-full transition-transform duration-500" id="mobile-menu">
+        <div class="flex flex-col items-center justify-center h-full space-y-8">
+            <a href="#about" class="font-serif text-3xl text-charcoal mobile-link">About</a>
+            <a href="#portfolio" class="font-serif text-3xl text-charcoal mobile-link">Portfolio</a>
+            <a href="#process" class="font-serif text-3xl text-charcoal mobile-link">Process</a>
+            <a href="#contact" class="font-serif text-3xl text-gold mobile-link">Commission</a>
+        </div>
+        <button class="absolute top-6 right-8 text-charcoal" id="mobile-menu-close">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center relative overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img 
+                src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=1920&q=80" 
+                alt="Hero artwork" 
+                class="w-full h-full object-cover parallax opacity-30"
+                id="hero-bg"
+            >
+            <div class="absolute inset-0 bg-gradient-to-r from-cream via-cream/80 to-transparent"></div>
+        </div>
+        
+        <div class="relative z-10 max-w-7xl mx-auto px-8 md:px-16 py-32">
+            <div class="max-w-2xl">
+                <p class="text-gold text-sm tracking-[0.3em] uppercase mb-6 hero-animate hero-animate-delay-1">Bespoke Art Commissions</p>
+                <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl font-light leading-tight mb-8 hero-animate hero-animate-delay-2">
+                    Art That Tells <br><em class="text-gold">Your Story</em>
+                </h1>
+                <div class="h-px bg-gold signature-line mb-8"></div>
+                <p class="text-soft-gray text-lg md:text-xl leading-relaxed mb-12 hero-animate hero-animate-delay-3">
+                    Transforming emotions into timeless masterpieces. Each commission is a unique journey, crafted with passion and precision.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 hero-animate hero-animate-delay-3">
+                    <a href="#portfolio" class="btn-primary border border-charcoal px-10 py-4 text-sm tracking-widest uppercase text-center relative z-10">
+                        View Collection
+                    </a>
+                    <a href="#contact" class="border border-gold text-gold px-10 py-4 text-sm tracking-widest uppercase text-center hover:bg-gold hover:text-white transition-colors duration-300">
+                        Start Your Commission
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center text-soft-gray">
+            <span class="text-xs tracking-widest uppercase mb-2">Scroll</span>
+            <div class="w-px h-12 bg-gold/50 relative overflow-hidden">
+                <div class="w-full h-4 bg-gold absolute top-0 animate-bounce"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 md:py-32 bg-warm-white">
+        <div class="max-w-7xl mx-auto px-8 md:px-16">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="fade-in-left">
+                    <div class="relative">
+                        <img 
+                            src="https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=800&q=80" 
+                            alt="Artist at work" 
+                            class="w-full h-[600px] object-cover"
+                        >
+                        <div class="absolute -bottom-8 -right-8 w-48 h-48 border border-gold"></div>
+                    </div>
+                </div>
+                <div class="fade-in-right">
+                    <p class="text-gold text-sm tracking-[0.3em] uppercase mb-4">The Artist</p>
+                    <h2 class="font-serif text-4xl md:text-5xl font-light mb-8">A Passion for <br><em>Timeless Beauty</em></h2>
+                    <div class="w-16 h-px bg-gold mb-8"></div>
+                    <p class="text-soft-gray leading-relaxed mb-6">
+                        With over a decade of experience in fine arts, I specialize in creating bespoke pieces that capture the essence of your most cherished moments. Each brushstroke is intentional, each color carefully chosen to evoke emotion and tell your unique story.
+                    </p>
+                    <p class="text-soft-gray leading-relaxed mb-8">
+                        My work has been featured in galleries across the country and graces the walls of collectors who appreciate the marriage of classical technique with contemporary vision.
+                    </p>
+                    <div class="flex items-center space-x-8">
+                        <div>
+                            <p class="font-serif text-4xl text-gold">200+</p>
+                            <p class="text-sm text-soft-gray tracking-widest uppercase">Commissions</p>
+                        </div>
+                        <div class="w-px h-12 bg-gold/30"></div>
+                        <div>
+                            <p class="font-serif text-4xl text-gold">12</p>
+                            <p class="text-sm text-soft-gray tracking-widest uppercase">Years Experience</p>
+                        </div>
+                        <div class="w-px h-12 bg-gold/30"></div>
+                        <div>
+                            <p class="font-serif text-4xl text-gold">50+</p>
+                            <p class="text-sm text-soft-gray tracking-widest uppercase">Gallery Shows</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="py-24 md:py-32 bg-cream">
+        <div class="max-w-7xl mx-auto px-8 md:px-16">
+            <div class="text-center mb-16 fade-in">
+                <p class="text-gold text-sm tracking-[0.3em] uppercase mb-4">Portfolio</p>
+                <h2 class="font-serif text-4xl md:text-5xl font-light mb-6">Selected <em>Works</em></h2>
+                <p class="text-soft-gray max-w-2xl mx-auto">A curated collection of commissioned pieces, each telling a unique story of love, memory, and beauty.</p>
+            </div>
+            
+            <!-- Filter buttons -->
+            <div class="flex justify-center space-x-8 mb-12 fade-in">
+                <button class="filter-btn text-charcoal border-b-2 border-gold pb-2 text-sm tracking-widest uppercase" data-filter="all">All</button>
+                <button class="filter-btn text-soft-gray hover:text-charcoal pb-2 text-sm tracking-widest uppercase transition-colors" data-filter="portraits">Portraits</button>
+                <button class="filter-btn text-soft-gray hover:text-charcoal pb-2 text-sm tracking-widest uppercase transition-colors" data-filter="landscapes">Landscapes</button>
+                <button class="filter-btn text-soft-gray hover:text-charcoal pb-2 text-sm tracking-widest uppercase transition-colors" data-filter="abstract">Abstract</button>
+            </div>
+            
+            <!-- Gallery Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="gallery-item fade-in relative cursor-pointer" data-category="portraits" onclick="openLightbox(this)">
+                    <img 
+                        src="https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=600&q=80" 
+                        alt="Portrait commission" 
+                        class="w-full h-80 object-cover"
+                    >
+                    <div class="gallery-overlay absolute inset-0 bg-charcoal/60 flex items-center justify-center">
+                        <div class="text-center text-white">
+                            <p class="font-serif text-2xl mb-2">Eternal Grace</p>
+                            <p class="text-sm tracking-widest uppercase text-gold-light">Portrait • Oil on Canvas</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item fade-in relative cursor-pointer lg:col-span-2" data-category="landscapes" onclick="openLightbox(this)">
+                    <img 
+                        src="https://images.unsplash.com/photo-1549289524-06cf8837ace5?w=1200&q=80" 
+                        alt="Landscape commission" 
+                        class="w-full h-80 object-cover"
+                    >
+                    <div class="gallery-overlay absolute inset-0 bg-charcoal/60 flex items-center justify-center">
+                        <div class="text-center text-white">
+                            <p class="font-serif text-2xl mb-2">Golden Horizons</p>
+                            <p class="text-sm tracking-widest uppercase text-gold-light">Landscape • Acrylic</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item fade-in relative cursor-pointer" data-category="abstract" onclick="openLightbox(this)">
+                    <img 
+                        src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=600&q=80" 
+                        alt="Abstract commission" 
+                        class="w-full h-96 object-cover"
+                    >
+                    <div class="gallery-overlay absolute inset-0 bg-charcoal/60 flex items-center justify-center">
+                        <div class="text-center text-white">
+                            <p class="font-serif text-2xl mb-2">Whispers of Dawn</p>
+                            <p class="text-sm tracking-widest uppercase text-gold-light">Abstract • Mixed Media</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item fade-in relative cursor-pointer" data-category="portraits" onclick="openLightbox(this)">
+                    <img 
+                        src="https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?w=600&q=80" 
+                        alt="Portrait commission" 
+                        class="w-full h-96 object-cover"
+                    >
+                    <div class="gallery-overlay absolute inset-0 bg-charcoal/60 flex items-center justify-center">
+                        <div class="text-center text-white">
+                            <p class="font-serif text-2xl mb-2">Silent Reverie</p>
+                            <p class="text-sm tracking-widest uppercase text-gold-light">Portrait • Watercolor</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item fade-in relative cursor-pointer" data-category="abstract" onclick="openLightbox(this)">
+                    <img 
+                        src="https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=600&q=80" 
+                        alt="Abstract commission" 
+                        class="w-full h-96 object-cover"
+                    >
+                    <div class="gallery-overlay absolute inset-0 bg-charcoal/60 flex items-center justify-center">
+                        <div class="text-center text-white">
+                            <p class="font-serif text-2xl mb-2">Chromatic Dreams</p>
+                            <p class="text-sm tracking-widest uppercase text-gold-light">Abstract • Oil on Canvas</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item fade-in relative cursor-pointer lg:col-span-2" data-category="landscapes" onclick="openLightbox(this)">
+                    <img 
+                        src="https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=1200&q=80" 
+                        alt="Landscape commission" 
+                        class="w-full h-80 object-cover"
+                    >
+                    <div class="gallery-overlay absolute inset-0 bg-charcoal/60 flex items-center justify-center">
+                        <div class="text-center text-white">
+                            <p class="font-serif text-2xl mb-2">Serene Waters</p>
+                            <p class="text-sm tracking-widest uppercase text-gold-light">Landscape • Oil on Canvas</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item fade-in relative cursor-pointer" data-category="portraits" onclick="openLightbox(this)">
+                    <img 
+                        src="https://images.unsplash.com/photo-1544967082-d9d25d867d66?w=600&q=80" 
+                        alt="Portrait commission" 
+                        class="w-full h-80 object-cover"
+                    >
+                    <div class="gallery-overlay absolute inset-0 bg-charcoal/60 flex items-center justify-center">
+                        <div class="text-center text-white">
+                            <p class="font-serif text-2xl mb-2">Timeless Bond</p>
+                            <p class="text-sm tracking-widest uppercase text-gold-light">Portrait • Charcoal</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section id="process" class="py-24 md:py-32 bg-charcoal text-cream">
+        <div class="max-w-7xl mx-auto px-8 md:px-16">
+            <div class="text-center mb-20 fade-in">
+                <p class="text-gold text-sm tracking-[0.3em] uppercase mb-4">The Journey</p>
+                <h2 class="font-serif text-4xl md:text-5xl font-light mb-6">Commission <em>Process</em></h2>
+                <p class="text-soft-gray max-w-2xl mx-auto">From initial consultation to final delivery, every step is designed to bring your vision to life with care and precision.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="text-center fade-in">
+                    <div class="w-20 h-20 rounded-full border border-gold flex items-center justify-center mx-auto mb-6">
+                        <span class="font-serif text-3xl text-gold">01</span>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-4">Consultation</h3>
+                    <p class="text-soft-gray text-sm leading-relaxed">We begin with a personal conversation to understand your vision, preferences, and the story you wish to tell.</p>
+                </div>
+                
+                <div class="text-center fade-in">
+                    <div class="w-20 h-20 rounded-full border border-gold flex items-center justify-center mx-auto mb-6">
+                        <span class="font-serif text-3xl text-gold">02</span>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-4">Concept</h3>
+                    <p class="text-soft-gray text-sm leading-relaxed">I create preliminary sketches and color studies for your approval before beginning the final piece.</p>
+                </div>
+                
+                <div class="text-center fade-in">
+                    <div class="w-20 h-20 rounded-full border border-gold flex items-center justify-center mx-auto mb-6">
+                        <span class="font-serif text-3xl text-gold">03</span>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-4">Creation</h3>
+                    <p class="text-soft-gray text-sm leading-relaxed">The artwork comes to life with regular progress updates, ensuring your complete satisfaction throughout.</p>
+                </div>
+                
+                <div class="text-center fade-in">
+                    <div class="w-20 h-20 rounded-full border border-gold flex items-center justify-center mx-auto mb-6">
+                        <span class="font-serif text-3xl text-gold">04</span>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-4">Delivery</h3>
+                    <p class="text-soft-gray text-sm leading-relaxed">Your finished masterpiece is carefully packaged and delivered, ready to grace your space for generations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="py-24 md:py-32 bg-warm-white">
+        <div class="max-w-7xl mx-auto px-8 md:px-16">
+            <div class="text-center mb-16 fade-in">
+                <p class="text-gold text-sm tracking-[0.3em] uppercase mb-4">Investment</p>
+                <h2 class="font-serif text-4xl md:text-5xl font-light mb-6">Commission <em>Tiers</em></h2>
+                <p class="text-soft-gray max-w-2xl mx-auto">Each tier includes consultation, concept sketches, progress updates, and premium packaging.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-cream p-10 text-center fade-in border border-transparent hover:border-gold transition-colors duration-300">
+                    <p class="text-gold text-sm tracking-[0.3em] uppercase mb-2">Intimate</p>
+                    <h3 class="font-serif text-3xl mb-4">Small Canvas</h3>
+                    <p class="text-soft-gray text-sm mb-6">Up to 16" × 20"</p>
+                    <p class="font-serif text-5xl text-charcoal mb-6">₹15,000</p>
+                    <ul class="text-soft-gray text-sm space-y-3 mb-8">
+                        <li>• Single subject focus</li>
+                        <li>• 2-3 week turnaround</li>
+                        <li>• 2 revision rounds</li>
+                        <li>• Certificate of authenticity</li>
+                    </ul>
+                    <a href="#contact" class="btn-primary border border-charcoal px-8 py-3 text-sm tracking-widest uppercase inline-block relative z-10">
+                        Inquire
+                    </a>
+                </div>
+                
+                <div class="bg-charcoal text-cream p-10 text-center fade-in transform md:-translate-y-4 shadow-2xl">
+                    <p class="text-gold text-sm tracking-[0.3em] uppercase mb-2">Signature</p>
+                    <h3 class="font-serif text-3xl mb-4">Medium Canvas</h3>
+                    <p class="text-soft-gray text-sm mb-6">Up to 24" × 36"</p>
+                    <p class="font-serif text-5xl text-gold mb-6">₹35,000</p>
+                    <ul class="text-soft-gray text-sm space-y-3 mb-8">
+                        <li>• Multiple subjects</li>
+                        <li>• 4-6 week turnaround</li>
+                        <li>• 3 revision rounds</li>
+                        <li>• Premium framing options</li>
+                    </ul>
+                    <a href="#contact" class="bg-gold text-charcoal px-8 py-3 text-sm tracking-widest uppercase inline-block hover:bg-gold-light transition-colors duration-300">
+                        Most Popular
+                    </a>
+                </div>
+                
+                <div class="bg-cream p-10 text-center fade-in border border-transparent hover:border-gold transition-colors duration-300">
+                    <p class="text-gold text-sm tracking-[0.3em] uppercase mb-2">Grand</p>
+                    <h3 class="font-serif text-3xl mb-4">Large Canvas</h3>
+                    <p class="text-soft-gray text-sm mb-6">Up to 40" × 60"</p>
+                    <p class="font-serif text-5xl text-charcoal mb-6">₹75,000</p>
+                    <ul class="text-soft-gray text-sm space-y-3 mb-8">
+                        <li>• Complex compositions</li>
+                        <li>• 8-12 week turnaround</li>
+                        <li>• Unlimited revisions</li>
+                        <li>• White-glove delivery</li>
+                    </ul>
+                    <a href="#contact" class="btn-primary border border-charcoal px-8 py-3 text-sm tracking-widest uppercase inline-block relative z-10">
+                        Inquire
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-24 md:py-32 bg-cream">
+        <div class="max-w-7xl mx-auto px-8 md:px-16">
+            <div class="text-center mb-16 fade-in">
+                <p class="text-gold text-sm tracking-[0.3em] uppercase mb-4">Testimonials</p>
+                <h2 class="font-serif text-4xl md:text-5xl font-light mb-6">Client <em>Stories</em></h2>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="testimonial-card bg-white p-8 fade-in">
+                    <div class="flex items-center mb-4">
+                        <div class="text-gold text-2xl">★★★★★</div>
+                    </div>
+                    <p class="text-soft-gray leading-relaxed mb-6 italic">"The portrait of our family exceeded every expectation. It's not just a painting—it's a treasure that captures who we are. The attention to detail is remarkable."</p>
+                    <div class="flex items-center">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80" alt="Client" class="w-12 h-12 rounded-full object-cover mr-4">
+                        <div>
+                            <p class="font-medium">Priya Sharma</p>
+                            <p class="text-soft-gray text-sm">Mumbai</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card bg-white p-8 fade-in">
+                    <div class="flex items-center mb-4">
+                        <div class="text-gold text-2xl">★★★★★</div>
+                    </div>
+                    <p class="text-soft-gray leading-relaxed mb-6 italic">"I commissioned a landscape of our ancestral home as a gift for my parents. When they saw it, there were tears of joy. Worth every penny and more."</p>
+                    <div class="flex items-center">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="Client" class="w-12 h-12 rounded-full object-cover mr-4">
+                        <div>
+                            <p class="font-medium">Rahul Mehta</p>
+                            <p class="text-soft-gray text-sm">Bangalore</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card bg-white p-8 fade-in">
+                    <div class="flex items-center mb-4">
+                        <div class="text-gold text-2xl">★★★★★</div>
+                    </div>
+                    <p class="text-soft-gray leading-relaxed mb-6 italic">"Working with Aria Studio was a beautiful experience from start to finish. The communication was excellent, and the final piece is simply stunning."</p>
+                    <div class="flex items-center">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80" alt="Client" class="w-12 h-12 rounded-full object-cover mr-4">
+                        <div>
+                            <p class="font-medium">Ananya Krishnan</p>
+                            <p class="text-soft-gray text-sm">Chennai</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 md:py-32 bg-charcoal text-cream relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-1/2 h-full opacity-10">
+            <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=1200&q=80" alt="Background" class="w-full h-full object-cover">
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-8 md:px-16 relative z-10">
+            <div class="grid md:grid-cols-2 gap-16">
+                <div class="fade-in-left">
+                    <p class="text-gold text-sm tracking-[0.3em] uppercase mb-4">Get in Touch</p>
+                    <h2 class="font-serif text-4xl md:text-5xl font-light mb-6">Begin Your <em>Commission</em></h2>
+                    <div class="w-16 h-px bg-gold mb-8"></div>
+                    <p class="text-soft-gray leading-relaxed mb-8">
+                        Ready to transform your vision into a timeless masterpiece? Fill out the form and I'll get back to you within 24 hours to discuss your project.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 border border-gold rounded-full flex items-center justify-center mr-4">
+                                <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm text-soft-gray">Email</p>
+                                <p class="text-cream">hello@ariastudio.art</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 border border-gold rounded-full flex items-center justify-center mr-4">
+                                <svg class="w-5 h-5 text-gold" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm text-soft-gray">WhatsApp</p>
+                                <p class="text-cream">+91 98765 43210</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 border border-gold rounded-full flex items-center justify-center mr-4">
+                                <svg class="w-5 h-5 text-gold" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm text-soft-gray">Instagram</p>
+                                <p class="text-cream">@ariastudio.art</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="fade-in-right">
+                    <form class="space-y-6" id="inquiry-form">
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm text-soft-gray mb-2">First Name</label>
+                                <input type="text" class="form-input w-full bg-transparent border border-soft-gray/30 px-4 py-3 text-cream transition-all duration-300" placeholder="Your name" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-soft-gray mb-2">Last Name</label>
+                                <input type="text" class="form-input w-full bg-transparent border border-soft-gray/30 px-4 py-3 text-cream transition-all duration-300" placeholder="Your surname">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm text-soft-gray mb-2">Email</label>
+                            <input type="email" class="form-input w-full bg-transparent border border-soft-gray/30 px-4 py-3 text-cream transition-all duration-300" placeholder="your@email.com" required>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm text-soft-gray mb-2">WhatsApp Number</label>
+                            <input type="tel" class="form-input w-full bg-transparent border border-soft-gray/30 px-4 py-3 text-cream transition-all duration-300" placeholder="+91 98765 43210">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm text-soft-gray mb-2">Type of Commission</label>
+                            <select class="form-input w-full bg-charcoal border border-soft-gray/30 px-4 py-3 text-cream transition-all duration-300">
+                                <option value="">Select type...</option>
+                                <option value="portrait">Portrait</option>
+                                <option value="landscape">Landscape</option>
+                                <option value="abstract">Abstract</option>
+                                <option value="pet">Pet Portrait</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm text-soft-gray mb-2">Budget Range</label>
+                            <select class="form-input w-full bg-charcoal border border-soft-gray/30 px-4 py-3 text-cream transition-all duration-300">
+                                <option value="">Select budget...</option>
+                                <option value="15000">₹15,000 - Small Canvas</option>
+                                <option value="35000">₹35,000 - Medium Canvas</option>
+                                <option value="75000">₹75,000+ - Large Canvas</option>
+                                <option value="custom">Custom / Not Sure</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm text-soft-gray mb-2">Tell me about your vision</label>
+                            <textarea rows="4" class="form-input w-full bg-transparent border border-soft-gray/30 px-4 py-3 text-cream transition-all duration-300 resize-none" placeholder="Describe what you'd like created..."></textarea>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="checkbox" id="whatsapp-consent" class="mr-3 accent-gold">
+                            <label for="whatsapp-consent" class="text-sm text-soft-gray">I'd like to receive updates via WhatsApp</label>
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-gold text-charcoal py-4 text-sm tracking-widest uppercase font-medium hover:bg-gold-light transition-colors duration-300">
+                            Submit Inquiry
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-charcoal border-t border-soft-gray/20">
+        <div class="max-w-7xl mx-auto px-8 md:px-16">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <a href="#" class="font-serif text-2xl text-cream">Aria <span class="text-gold">Studio</span></a>
+                    <p class="text-soft-gray text-sm mt-2">Bespoke Art Commissions</p>
+                </div>
+                
+                <div class="flex space-x-6">
+                    <a href="#" class="w-10 h-10 border border-soft-gray/30 rounded-full flex items-center justify-center text-soft-gray hover:border-gold hover:text-gold transition-colors duration-300">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z"/>
+                            <path d="M12 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4z"/>
+                            <circle cx="18.406" cy="5.594" r="1.44"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="w-10 h-10 border border-soft-gray/30 rounded-full flex items-center justify-center text-soft-gray hover:border-gold hover:text-gold transition-colors duration-300">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="w-10 h-10 border border-soft-gray/30 rounded-full flex items-center justify-center text-soft-gray hover:border-gold hover:text-gold transition-colors duration-300">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm4.441 16.892c-2.102.144-6.784.144-8.883 0C5.282 16.736 5.017 15.622 5 12c.017-3.629.285-4.736 2.558-4.892 2.099-.144 6.782-.144 8.883 0C18.718 7.264 18.982 8.378 19 12c-.018 3.629-.285 4.736-2.559 4.892zM10 9.658l4.917 2.338L10 14.342V9.658z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="w-10 h-10 border border-soft-gray/30 rounded-full flex items-center justify-center text-soft-gray hover:border-gold hover:text-gold transition-colors duration-300">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.654-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-soft-gray/20 text-center">
+                <p class="text-soft-gray text-sm">© 2024 Aria Studio. All rights reserved. | Crafted with ♥</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lightbox -->
+    <div class="lightbox fixed inset-0 bg-charcoal/95 z-50 flex items-center justify-center p-8" id="lightbox">
+        <button class="absolute top-6 right-6 text-white hover:text-gold transition-colors" onclick="closeLightbox()">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+        <div class="lightbox-content max-w-4xl w-full">
+            <img src="" alt="" class="w-full max-h-[80vh] object-contain" id="lightbox-image">
+            <div class="text-center mt-6">
+                <h3 class="font-serif text-3xl text-white" id="lightbox-title"></h3>
+                <p class="text-gold-light tracking-widest uppercase text-sm mt-2" id="lightbox-subtitle"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navbar scroll effect
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Parallax effect for hero
+        const heroBg = document.getElementById('hero-bg');
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            if (heroBg && scrolled < window.innerHeight) {
+                heroBg.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+
+        // Fade-in animations on scroll
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Mobile menu
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuClose = document.getElementById('mobile-menu-close');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.remove('translate-x-full');
+        });
+
+        mobileMenuClose.addEventListener('click', () => {
+            mobileMenu.classList.add('translate-x-full');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('translate-x-full');
+            });
+        });
+
+        // Gallery filter
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filter = btn.dataset.filter;
+                
+                filterBtns.forEach(b => {
+                    b.classList.remove('text-charcoal', 'border-b-2', 'border-gold');
+                    b.classList.add('text-soft-gray');
+                });
+                btn.classList.remove('text-soft-gray');
+                btn.classList.add('text-charcoal', 'border-b-2', 'border-gold');
+
+                galleryItems.forEach(item => {
+                    if (filter === 'all' || item.dataset.category === filter) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Lightbox
+        function openLightbox(element) {
+            const img = element.querySelector('img');
+            const title = element.querySelector('.font-serif').textContent;
+            const subtitle = element.querySelector('.text-gold-light').textContent;
+            
+            document.getElementById('lightbox-image').src = img.src;
+            document.getElementById('lightbox-title').textContent = title;
+            document.getElementById('lightbox-subtitle').textContent = subtitle;
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('lightbox')) {
+                closeLightbox();
+            }
+        });
+
+        // Escape key to close lightbox
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+
+        // Form submission (demo)
+        document.getElementById('inquiry-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for your inquiry! This is a demo form. In production, this would submit to your backend and forward to WhatsApp.');
+        });
+    </script>
+</body>
+</html>

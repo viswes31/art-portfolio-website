@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soul Canvas | Bohemian Art Commissions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Boho color palette
+                        'terracotta': '#C67D5E',
+                        'terracotta-dark': '#A65D3F',
+                        'sage': '#9CAF88',
+                        'sage-light': '#B8C9A9',
+                        'rust': '#B7594E',
+                        'mustard': '#D4A84B',
+                        'cream': '#FDF8F3',
+                        'sand': '#E8DDD4',
+                        'mocha': '#6B5344',
+                        'espresso': '#3D2E24',
+                        'blush': '#E8C4B8',
+                        'dusty-rose': '#C9A9A6',
+                    },
+                    fontFamily: {
+                        'serif': ['Libre Baskerville', 'serif'],
+                        'sans': ['Nunito', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #FDF8F3;
+            overflow-x: hidden;
+        }
+        
+        .font-serif {
+            font-family: 'Libre Baskerville', serif;
+        }
+        
+        /* Boho decorative elements */
+        .boho-border {
+            border-image: repeating-linear-gradient(
+                45deg,
+                #C67D5E,
+                #C67D5E 10px,
+                #9CAF88 10px,
+                #9CAF88 20px,
+                #D4A84B 20px,
+                #D4A84B 30px
+            ) 1;
+        }
+        
+        /* Carousel styles */
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .carousel-slide {
+            min-width: 100%;
+            padding: 0 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .carousel-slide {
+                min-width: 50%;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .carousel-slide {
+                min-width: 33.333%;
+            }
+        }
+        
+        .carousel-slide img {
+            transition: transform 0.4s ease, filter 0.4s ease;
+        }
+        
+        .carousel-slide:hover img {
+            transform: scale(1.03);
+        }
+        
+        /* Dot indicators */
+        .carousel-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #E8DDD4;
+            transition: all 0.3s ease;
+        }
+        
+        .carousel-dot.active {
+            background: #C67D5E;
+            transform: scale(1.2);
+        }
+        
+        /* Smooth fade-in animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Hero animations */
+        @keyframes floatIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px) rotate(-2deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) rotate(0);
+            }
+        }
+        
+        .hero-float {
+            animation: floatIn 1.2s ease-out forwards;
+        }
+        
+        .hero-float-delay-1 { animation-delay: 0.2s; opacity: 0; }
+        .hero-float-delay-2 { animation-delay: 0.4s; opacity: 0; }
+        .hero-float-delay-3 { animation-delay: 0.6s; opacity: 0; }
+        
+        /* Boho pattern background */
+        .boho-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L30 60M0 30L60 30M0 0L60 60M60 0L0 60' stroke='%23C67D5E' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3C/svg%3E");
+        }
+        
+        /* Mandala decoration */
+        .mandala {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='80' fill='none' stroke='%23C67D5E' stroke-width='1' opacity='0.3'/%3E%3Ccircle cx='100' cy='100' r='60' fill='none' stroke='%239CAF88' stroke-width='1' opacity='0.3'/%3E%3Ccircle cx='100' cy='100' r='40' fill='none' stroke='%23D4A84B' stroke-width='1' opacity='0.3'/%3E%3Ccircle cx='100' cy='100' r='20' fill='none' stroke='%23C67D5E' stroke-width='1' opacity='0.3'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        /* Button hover effect */
+        .btn-boho {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        
+        .btn-boho::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: #9CAF88;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+            z-index: -1;
+        }
+        
+        .btn-boho:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .btn-boho:hover {
+            color: #3D2E24;
+        }
+        
+        /* Navbar transition */
+        .navbar {
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            background-color: rgba(253, 248, 243, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(107, 83, 68, 0.1);
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #FDF8F3;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #C67D5E;
+            border-radius: 4px;
+        }
+        
+        /* Testimonial carousel */
+        .testimonial-track {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        
+        .testimonial-slide {
+            min-width: 100%;
+            padding: 0 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .testimonial-slide {
+                min-width: 50%;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .testimonial-slide {
+                min-width: 33.333%;
+            }
+        }
+        
+        /* Card hover */
+        .boho-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .boho-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(107, 83, 68, 0.15);
+        }
+        
+        /* Lightbox */
+        .lightbox {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Arch frame */
+        .arch-frame {
+            clip-path: ellipse(50% 48% at 50% 52%);
+        }
+        
+        /* Decorative line */
+        .boho-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #C67D5E, #9CAF88, #D4A84B, #9CAF88, #C67D5E, transparent);
+        }
+        
+        /* Wavy section divider */
+        .wave-divider {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+        }
+        
+        .wave-divider svg {
+            position: relative;
+            display: block;
+            width: calc(100% + 1.3px);
+            height: 60px;
+        }
+        
+        /* Dried flower decoration placeholder */
+        .dried-flower {
+            position: absolute;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-cream text-espresso">
+
+    <!-- Navigation -->
+    <nav class="navbar fixed top-0 left-0 right-0 z-50 py-5 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2">
+                <svg class="w-10 h-10 text-terracotta" viewBox="0 0 100 100" fill="currentColor">
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    <circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" stroke-width="1"/>
+                    <circle cx="50" cy="50" r="8" fill="currentColor"/>
+                </svg>
+                <span class="font-serif text-2xl text-espresso">Soul Canvas</span>
+            </a>
+            <div class="hidden md:flex items-center space-x-10">
+                <a href="#about" class="text-mocha hover:text-terracotta transition-colors duration-300 text-sm tracking-wide">About</a>
+                <a href="#gallery" class="text-mocha hover:text-terracotta transition-colors duration-300 text-sm tracking-wide">Gallery</a>
+                <a href="#process" class="text-mocha hover:text-terracotta transition-colors duration-300 text-sm tracking-wide">Process</a>
+                <a href="#pricing" class="text-mocha hover:text-terracotta transition-colors duration-300 text-sm tracking-wide">Pricing</a>
+                <a href="#contact" class="btn-boho bg-terracotta text-cream px-6 py-3 rounded-full text-sm tracking-wide relative z-10">
+                    Book a Session
+                </a>
+            </div>
+            <button class="md:hidden text-espresso" id="mobile-menu-btn">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="fixed inset-0 bg-cream z-40 transform translate-x-full transition-transform duration-500" id="mobile-menu">
+        <div class="flex flex-col items-center justify-center h-full space-y-8">
+            <a href="#about" class="font-serif text-2xl text-espresso mobile-link">About</a>
+            <a href="#gallery" class="font-serif text-2xl text-espresso mobile-link">Gallery</a>
+            <a href="#process" class="font-serif text-2xl text-espresso mobile-link">Process</a>
+            <a href="#pricing" class="font-serif text-2xl text-espresso mobile-link">Pricing</a>
+            <a href="#contact" class="font-serif text-2xl text-terracotta mobile-link">Book a Session</a>
+        </div>
+        <button class="absolute top-5 right-6 text-espresso" id="mobile-menu-close">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center relative boho-pattern pt-20">
+        <!-- Decorative circles -->
+        <div class="absolute top-20 right-10 w-64 h-64 rounded-full bg-sage/10 blur-3xl"></div>
+        <div class="absolute bottom-20 left-10 w-80 h-80 rounded-full bg-terracotta/10 blur-3xl"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 md:px-12 py-20">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="order-2 md:order-1">
+                    <div class="inline-flex items-center space-x-2 bg-sand/50 px-4 py-2 rounded-full mb-6 hero-float hero-float-delay-1">
+                        <span class="w-2 h-2 bg-sage rounded-full"></span>
+                        <span class="text-mocha text-sm">Handcrafted with Love</span>
+                    </div>
+                    <h1 class="font-serif text-4xl md:text-6xl lg:text-7xl leading-tight mb-6 hero-float hero-float-delay-2">
+                        Art that speaks to your <span class="text-terracotta italic">soul</span>
+                    </h1>
+                    <p class="text-mocha text-lg md:text-xl leading-relaxed mb-8 hero-float hero-float-delay-3">
+                        Bespoke bohemian artwork infused with warmth, nature, and the stories that make your life beautiful. Every piece is a journey.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 hero-float hero-float-delay-3">
+                        <a href="#gallery" class="btn-boho bg-terracotta text-cream px-8 py-4 rounded-full text-center relative z-10 font-medium">
+                            Explore Collection
+                        </a>
+                        <a href="#contact" class="border-2 border-sage text-sage px-8 py-4 rounded-full text-center hover:bg-sage hover:text-cream transition-all duration-300 font-medium">
+                            Start Your Commission
+                        </a>
+                    </div>
+                </div>
+                <div class="order-1 md:order-2 relative hero-float">
+                    <div class="relative">
+                        <!-- Main image with arch frame -->
+                        <div class="relative bg-sand p-4 rounded-t-full">
+                            <img 
+                                src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&q=80" 
+                                alt="Featured artwork" 
+                                class="w-full h-[500px] object-cover rounded-t-full"
+                            >
+                        </div>
+                        <!-- Decorative elements -->
+                        <div class="absolute -bottom-4 -left-4 w-24 h-24 border-4 border-mustard rounded-full"></div>
+                        <div class="absolute -top-4 -right-4 w-16 h-16 bg-sage/30 rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Wave divider -->
+        <div class="wave-divider">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" fill="#E8DDD4">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C57.1,118.92,156.63,69.08,321.39,56.44Z"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-sand relative">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="fade-in relative">
+                    <div class="grid grid-cols-2 gap-4">
+                        <img 
+                            src="https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=600&q=80" 
+                            alt="Artist at work" 
+                            class="w-full h-64 object-cover rounded-2xl"
+                        >
+                        <img 
+                            src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&q=80" 
+                            alt="Art supplies" 
+                            class="w-full h-64 object-cover rounded-2xl mt-8"
+                        >
+                        <img 
+                            src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=600&q=80" 
+                            alt="Painting process" 
+                            class="w-full h-64 object-cover rounded-2xl -mt-4"
+                        >
+                        <img 
+                            src="https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=600&q=80" 
+                            alt="Studio" 
+                            class="w-full h-64 object-cover rounded-2xl mt-4"
+                        >
+                    </div>
+                    <!-- Decorative circle -->
+                    <div class="absolute -bottom-8 -left-8 w-32 h-32 bg-terracotta/20 rounded-full -z-10"></div>
+                </div>
+                <div class="fade-in">
+                    <span class="inline-block bg-sage/20 text-sage-light px-4 py-1 rounded-full text-sm mb-4" style="color: #6B7A5E;">The Artist</span>
+                    <h2 class="font-serif text-4xl md:text-5xl mb-6">Creating from the <em class="text-terracotta">heart</em></h2>
+                    <div class="boho-divider w-24 mb-8"></div>
+                    <p class="text-mocha leading-relaxed mb-6">
+                        Hello, beautiful soul! I'm an artist who believes that every brushstroke carries energy, every color tells a story, and every piece of art is a portal to emotions we sometimes can't put into words.
+                    </p>
+                    <p class="text-mocha leading-relaxed mb-8">
+                        My bohemian-inspired work draws from nature's palette—the rust of autumn leaves, the sage of morning meadows, the warm terracotta of sunset skies. Each commission is a collaboration, a sacred space where your vision meets my craft.
+                    </p>
+                    <div class="grid grid-cols-3 gap-6">
+                        <div class="text-center">
+                            <p class="font-serif text-4xl text-terracotta">150+</p>
+                            <p class="text-sm text-mocha">Happy Clients</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="font-serif text-4xl text-sage">8</p>
+                            <p class="text-sm text-mocha">Years Creating</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="font-serif text-4xl text-mustard">∞</p>
+                            <p class="text-sm text-mocha">Love Poured</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Carousel Section -->
+    <section id="gallery" class="py-24 bg-cream relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="text-center mb-16 fade-in">
+                <span class="inline-block bg-terracotta/10 text-terracotta px-4 py-1 rounded-full text-sm mb-4">Portfolio</span>
+                <h2 class="font-serif text-4xl md:text-5xl mb-4">Soulful <em>Creations</em></h2>
+                <p class="text-mocha max-w-2xl mx-auto">Each piece carries a story, an emotion, a piece of someone's heart transformed into art.</p>
+            </div>
+            
+            <!-- Main Gallery Carousel -->
+            <div class="carousel-container mb-8 fade-in" id="main-carousel">
+                <div class="carousel-track" id="carousel-track">
+                    <!-- Slide 1 -->
+                    <div class="carousel-slide">
+                        <div class="boho-card bg-sand rounded-3xl overflow-hidden cursor-pointer" onclick="openLightbox(0)">
+                            <img 
+                                src="https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=800&q=80" 
+                                alt="Bohemian Portrait" 
+                                class="w-full h-80 object-cover"
+                            >
+                            <div class="p-6">
+                                <h3 class="font-serif text-xl mb-2">Wild Spirit</h3>
+                                <p class="text-mocha text-sm">Bohemian Portrait • Acrylic on Canvas</p>
+                                <div class="flex items-center mt-4 space-x-2">
+                                    <span class="w-3 h-3 rounded-full bg-terracotta"></span>
+                                    <span class="w-3 h-3 rounded-full bg-sage"></span>
+                                    <span class="w-3 h-3 rounded-full bg-mustard"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 2 -->
+                    <div class="carousel-slide">
+                        <div class="boho-card bg-sand rounded-3xl overflow-hidden cursor-pointer" onclick="openLightbox(1)">
+                            <img 
+                                src="https://images.unsplash.com/photo-1549289524-06cf8837ace5?w=800&q=80" 
+                                alt="Desert Dreams" 
+                                class="w-full h-80 object-cover"
+                            >
+                            <div class="p-6">
+                                <h3 class="font-serif text-xl mb-2">Desert Dreams</h3>
+                                <p class="text-mocha text-sm">Landscape • Mixed Media</p>
+                                <div class="flex items-center mt-4 space-x-2">
+                                    <span class="w-3 h-3 rounded-full bg-rust"></span>
+                                    <span class="w-3 h-3 rounded-full bg-mustard"></span>
+                                    <span class="w-3 h-3 rounded-full bg-blush"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 3 -->
+                    <div class="carousel-slide">
+                        <div class="boho-card bg-sand rounded-3xl overflow-hidden cursor-pointer" onclick="openLightbox(2)">
+                            <img 
+                                src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&q=80" 
+                                alt="Autumn Whispers" 
+                                class="w-full h-80 object-cover"
+                            >
+                            <div class="p-6">
+                                <h3 class="font-serif text-xl mb-2">Autumn Whispers</h3>
+                                <p class="text-mocha text-sm">Abstract • Oil on Canvas</p>
+                                <div class="flex items-center mt-4 space-x-2">
+                                    <span class="w-3 h-3 rounded-full bg-terracotta"></span>
+                                    <span class="w-3 h-3 rounded-full bg-rust"></span>
+                                    <span class="w-3 h-3 rounded-full bg-mocha"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 4 -->
+                    <div class="carousel-slide">
+                        <div class="boho-card bg-sand rounded-3xl overflow-hidden cursor-pointer" onclick="openLightbox(3)">
+                            <img 
+                                src="https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?w=800&q=80" 
+                                alt="Gentle Soul" 
+                                class="w-full h-80 object-cover"
+                            >
+                            <div class="p-6">
+                                <h3 class="font-serif text-xl mb-2">Gentle Soul</h3>
+                                <p class="text-mocha text-sm">Portrait • Watercolor</p>
+                                <div class="flex items-center mt-4 space-x-2">
+                                    <span class="w-3 h-3 rounded-full bg-blush"></span>
+                                    <span class="w-3 h-3 rounded-full bg-dusty-rose"></span>
+                                    <span class="w-3 h-3 rounded-full bg-sage"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 5 -->
+                    <div class="carousel-slide">
+                        <div class="boho-card bg-sand rounded-3xl overflow-hidden cursor-pointer" onclick="openLightbox(4)">
+                            <img 
+                                src="https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=800&q=80" 
+                                alt="Earth Mother" 
+                                class="w-full h-80 object-cover"
+                            >
+                            <div class="p-6">
+                                <h3 class="font-serif text-xl mb-2">Earth Mother</h3>
+                                <p class="text-mocha text-sm">Abstract • Acrylic & Gold Leaf</p>
+                                <div class="flex items-center mt-4 space-x-2">
+                                    <span class="w-3 h-3 rounded-full bg-sage"></span>
+                                    <span class="w-3 h-3 rounded-full bg-terracotta"></span>
+                                    <span class="w-3 h-3 rounded-full bg-mustard"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 6 -->
+                    <div class="carousel-slide">
+                        <div class="boho-card bg-sand rounded-3xl overflow-hidden cursor-pointer" onclick="openLightbox(5)">
+                            <img 
+                                src="https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=800&q=80" 
+                                alt="Moonlit Garden" 
+                                class="w-full h-80 object-cover"
+                            >
+                            <div class="p-6">
+                                <h3 class="font-serif text-xl mb-2">Moonlit Garden</h3>
+                                <p class="text-mocha text-sm">Botanical • Gouache</p>
+                                <div class="flex items-center mt-4 space-x-2">
+                                    <span class="w-3 h-3 rounded-full bg-sage"></span>
+                                    <span class="w-3 h-3 rounded-full bg-blush"></span>
+                                    <span class="w-3 h-3 rounded-full bg-mustard"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Navigation Arrows -->
+                <button class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-cream/90 rounded-full flex items-center justify-center shadow-lg hover:bg-terracotta hover:text-cream transition-all duration-300 z-10" onclick="moveCarousel(-1)">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+                <button class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-cream/90 rounded-full flex items-center justify-center shadow-lg hover:bg-terracotta hover:text-cream transition-all duration-300 z-10" onclick="moveCarousel(1)">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Dot Indicators -->
+            <div class="flex justify-center space-x-3" id="carousel-dots">
+                <button class="carousel-dot active" onclick="goToSlide(0)"></button>
+                <button class="carousel-dot" onclick="goToSlide(1)"></button>
+                <button class="carousel-dot" onclick="goToSlide(2)"></button>
+                <button class="carousel-dot" onclick="goToSlide(3)"></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section id="process" class="py-24 bg-sand relative">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="text-center mb-16 fade-in">
+                <span class="inline-block bg-sage/20 px-4 py-1 rounded-full text-sm mb-4" style="color: #6B7A5E;">The Journey</span>
+                <h2 class="font-serif text-4xl md:text-5xl mb-4">How the <em class="text-terracotta">magic</em> happens</h2>
+                <p class="text-mocha max-w-2xl mx-auto">From our first conversation to the moment you unwrap your artwork, every step is crafted with intention and care.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="fade-in text-center relative">
+                    <div class="w-20 h-20 bg-terracotta/10 rounded-full flex items-center justify-center mx-auto mb-6 relative">
+                        <span class="font-serif text-3xl text-terracotta">1</span>
+                        <div class="absolute -right-4 top-1/2 w-8 h-0.5 bg-terracotta/30 hidden md:block"></div>
+                    </div>
+                    <h3 class="font-serif text-xl mb-3">Connect</h3>
+                    <p class="text-mocha text-sm leading-relaxed">We begin with a heart-to-heart conversation about your vision, your story, and what this art means to you.</p>
+                </div>
+                
+                <div class="fade-in text-center relative">
+                    <div class="w-20 h-20 bg-sage/20 rounded-full flex items-center justify-center mx-auto mb-6 relative">
+                        <span class="font-serif text-3xl text-sage">2</span>
+                        <div class="absolute -right-4 top-1/2 w-8 h-0.5 bg-sage/30 hidden md:block"></div>
+                    </div>
+                    <h3 class="font-serif text-xl mb-3">Create</h3>
+                    <p class="text-mocha text-sm leading-relaxed">I create concept sketches and color palettes, sharing progress and gathering your feedback along the way.</p>
+                </div>
+                
+                <div class="fade-in text-center relative">
+                    <div class="w-20 h-20 bg-mustard/20 rounded-full flex items-center justify-center mx-auto mb-6 relative">
+                        <span class="font-serif text-3xl text-mustard">3</span>
+                        <div class="absolute -right-4 top-1/2 w-8 h-0.5 bg-mustard/30 hidden md:block"></div>
+                    </div>
+                    <h3 class="font-serif text-xl mb-3">Craft</h3>
+                    <p class="text-mocha text-sm leading-relaxed">With love and intention, your piece comes to life. I send updates so you can witness the transformation.</p>
+                </div>
+                
+                <div class="fade-in text-center">
+                    <div class="w-20 h-20 bg-dusty-rose/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="font-serif text-3xl text-dusty-rose">4</span>
+                    </div>
+                    <h3 class="font-serif text-xl mb-3">Cherish</h3>
+                    <p class="text-mocha text-sm leading-relaxed">Your artwork arrives safely wrapped, ready to bring warmth and beauty to your sacred space.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-24 bg-cream">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="text-center mb-16 fade-in">
+                <span class="inline-block bg-mustard/20 text-mustard px-4 py-1 rounded-full text-sm mb-4">Investment</span>
+                <h2 class="font-serif text-4xl md:text-5xl mb-4">Soulful <em class="text-terracotta">Offerings</em></h2>
+                <p class="text-mocha max-w-2xl mx-auto">Choose the canvas size that speaks to your space. Each tier includes consultation, progress updates, and mindful packaging.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Tier 1 -->
+                <div class="fade-in boho-card bg-sand rounded-3xl p-8 text-center">
+                    <div class="w-16 h-16 bg-sage/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8 text-sage" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-2">Seed</h3>
+                    <p class="text-mocha text-sm mb-4">Small Canvas • Up to 12" × 16"</p>
+                    <p class="font-serif text-5xl text-espresso mb-6">₹12,000</p>
+                    <ul class="text-mocha text-sm space-y-3 mb-8 text-left">
+                        <li class="flex items-center"><span class="w-2 h-2 bg-sage rounded-full mr-3"></span>Single subject focus</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-sage rounded-full mr-3"></span>2 week creation time</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-sage rounded-full mr-3"></span>2 revision rounds</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-sage rounded-full mr-3"></span>Digital preview</li>
+                    </ul>
+                    <a href="#contact" class="block w-full border-2 border-sage text-sage py-3 rounded-full hover:bg-sage hover:text-cream transition-all duration-300">
+                        Begin Journey
+                    </a>
+                </div>
+                
+                <!-- Tier 2 - Featured -->
+                <div class="fade-in boho-card bg-terracotta text-cream rounded-3xl p-8 text-center transform md:-translate-y-4 shadow-2xl">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-mustard text-espresso text-xs px-4 py-1 rounded-full font-medium">
+                        Most Loved
+                    </div>
+                    <div class="w-16 h-16 bg-cream/20 rounded-full flex items-center justify-center mx-auto mb-6 mt-4">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-2">Bloom</h3>
+                    <p class="text-cream/80 text-sm mb-4">Medium Canvas • Up to 20" × 24"</p>
+                    <p class="font-serif text-5xl mb-6">₹28,000</p>
+                    <ul class="text-cream/90 text-sm space-y-3 mb-8 text-left">
+                        <li class="flex items-center"><span class="w-2 h-2 bg-mustard rounded-full mr-3"></span>Multiple subjects welcome</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-mustard rounded-full mr-3"></span>4 week creation time</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-mustard rounded-full mr-3"></span>3 revision rounds</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-mustard rounded-full mr-3"></span>Video progress updates</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-mustard rounded-full mr-3"></span>Certificate of authenticity</li>
+                    </ul>
+                    <a href="#contact" class="block w-full bg-cream text-terracotta py-3 rounded-full hover:bg-mustard hover:text-espresso transition-all duration-300 font-medium">
+                        Begin Journey
+                    </a>
+                </div>
+                
+                <!-- Tier 3 -->
+                <div class="fade-in boho-card bg-sand rounded-3xl p-8 text-center">
+                    <div class="w-16 h-16 bg-mustard/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8 text-mustard" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-2">Flourish</h3>
+                    <p class="text-mocha text-sm mb-4">Large Canvas • Up to 30" × 40"</p>
+                    <p class="font-serif text-5xl text-espresso mb-6">₹55,000</p>
+                    <ul class="text-mocha text-sm space-y-3 mb-8 text-left">
+                        <li class="flex items-center"><span class="w-2 h-2 bg-mustard rounded-full mr-3"></span>Complex compositions</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-mustard rounded-full mr-3"></span>6-8 week creation time</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-mustard rounded-full mr-3"></span>Unlimited revisions</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-mustard rounded-full mr-3"></span>Behind-the-scenes video</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-mustard rounded-full mr-3"></span>White-glove delivery</li>
+                    </ul>
+                    <a href="#contact" class="block w-full border-2 border-mustard text-mustard py-3 rounded-full hover:bg-mustard hover:text-cream transition-all duration-300">
+                        Begin Journey
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Carousel -->
+    <section class="py-24 bg-sand">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="text-center mb-16 fade-in">
+                <span class="inline-block bg-dusty-rose/30 text-dusty-rose px-4 py-1 rounded-full text-sm mb-4">Love Notes</span>
+                <h2 class="font-serif text-4xl md:text-5xl mb-4">Words from the <em class="text-terracotta">heart</em></h2>
+            </div>
+            
+            <div class="carousel-container" id="testimonial-carousel">
+                <div class="testimonial-track" id="testimonial-track">
+                    <div class="testimonial-slide">
+                        <div class="boho-card bg-cream rounded-3xl p-8">
+                            <div class="flex items-center mb-4">
+                                <span class="text-mustard text-2xl">✦ ✦ ✦ ✦ ✦</span>
+                            </div>
+                            <p class="text-mocha leading-relaxed mb-6 italic">"Working with Soul Canvas was like having a friend who just understood what I couldn't put into words. The painting of my late grandmother brought tears to my eyes—it's like she's here with us again."</p>
+                            <div class="flex items-center">
+                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80" alt="Client" class="w-14 h-14 rounded-full object-cover mr-4 border-2 border-terracotta">
+                                <div>
+                                    <p class="font-medium text-espresso">Meera Kapoor</p>
+                                    <p class="text-mocha text-sm">Portrait Commission</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-slide">
+                        <div class="boho-card bg-cream rounded-3xl p-8">
+                            <div class="flex items-center mb-4">
+                                <span class="text-mustard text-2xl">✦ ✦ ✦ ✦ ✦</span>
+                            </div>
+                            <p class="text-mocha leading-relaxed mb-6 italic">"The abstract piece for our new home is absolutely stunning. The colors are exactly the earthy, grounding tones we wanted. It's become the soul of our living room."</p>
+                            <div class="flex items-center">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="Client" class="w-14 h-14 rounded-full object-cover mr-4 border-2 border-sage">
+                                <div>
+                                    <p class="font-medium text-espresso">Arjun & Priya</p>
+                                    <p class="text-mocha text-sm">Abstract Commission</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-slide">
+                        <div class="boho-card bg-cream rounded-3xl p-8">
+                            <div class="flex items-center mb-4">
+                                <span class="text-mustard text-2xl">✦ ✦ ✦ ✦ ✦</span>
+                            </div>
+                            <p class="text-mocha leading-relaxed mb-6 italic">"I commissioned a landscape of the beach where we got engaged. Every time I look at it, I'm transported back to that magical sunset. Pure art therapy for the soul."</p>
+                            <div class="flex items-center">
+                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80" alt="Client" class="w-14 h-14 rounded-full object-cover mr-4 border-2 border-mustard">
+                                <div>
+                                    <p class="font-medium text-espresso">Neha Sharma</p>
+                                    <p class="text-mocha text-sm">Landscape Commission</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Navigation -->
+                <button class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-cream rounded-full flex items-center justify-center shadow-lg hover:bg-terracotta hover:text-cream transition-all duration-300 z-10" onclick="moveTestimonialCarousel(-1)">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+                <button class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-cream rounded-full flex items-center justify-center shadow-lg hover:bg-terracotta hover:text-cream transition-all duration-300 z-10" onclick="moveTestimonialCarousel(1)">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-espresso text-cream relative overflow-hidden">
+        <!-- Decorative elements -->
+        <div class="absolute top-0 left-0 w-full h-full opacity-5">
+            <div class="absolute top-10 left-10 w-64 h-64 border border-cream rounded-full"></div>
+            <div class="absolute bottom-10 right-10 w-48 h-48 border border-cream rounded-full"></div>
+            <div class="absolute top-1/2 left-1/2 w-96 h-96 border border-cream rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+            <div class="grid md:grid-cols-2 gap-16">
+                <div class="fade-in">
+                    <span class="inline-block bg-terracotta/30 text-terracotta px-4 py-1 rounded-full text-sm mb-4">Let's Connect</span>
+                    <h2 class="font-serif text-4xl md:text-5xl mb-6">Ready to create something <em class="text-terracotta">beautiful</em>?</h2>
+                    <div class="boho-divider w-24 mb-8"></div>
+                    <p class="text-sand/80 leading-relaxed mb-8">
+                        I'd love to hear your story and bring your vision to life. Fill out the form, and I'll reach out within 24 hours to start our creative journey together.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-terracotta/20 rounded-full flex items-center justify-center mr-4">
+                                <svg class="w-5 h-5 text-terracotta" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm text-sand/60">WhatsApp</p>
+                                <p class="text-cream">+91 98765 43210</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-sage/20 rounded-full flex items-center justify-center mr-4">
+                                <svg class="w-5 h-5 text-sage" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm text-sand/60">Instagram</p>
+                                <p class="text-cream">@soulcanvas.art</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-mustard/20 rounded-full flex items-center justify-center mr-4">
+                                <svg class="w-5 h-5 text-mustard" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm text-sand/60">Email</p>
+                                <p class="text-cream">hello@soulcanvas.art</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="fade-in">
+                    <form class="bg-mocha/30 rounded-3xl p-8 space-y-6" id="contact-form">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm text-sand/80 mb-2">First Name</label>
+                                <input type="text" class="w-full bg-espresso/50 border border-mocha/50 rounded-xl px-4 py-3 text-cream placeholder-sand/40 focus:outline-none focus:border-terracotta transition-colors" placeholder="Your name" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-sand/80 mb-2">Last Name</label>
+                                <input type="text" class="w-full bg-espresso/50 border border-mocha/50 rounded-xl px-4 py-3 text-cream placeholder-sand/40 focus:outline-none focus:border-terracotta transition-colors" placeholder="Surname">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm text-sand/80 mb-2">Email</label>
+                            <input type="email" class="w-full bg-espresso/50 border border-mocha/50 rounded-xl px-4 py-3 text-cream placeholder-sand/40 focus:outline-none focus:border-terracotta transition-colors" placeholder="your@email.com" required>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm text-sand/80 mb-2">WhatsApp Number</label>
+                            <input type="tel" class="w-full bg-espresso/50 border border-mocha/50 rounded-xl px-4 py-3 text-cream placeholder-sand/40 focus:outline-none focus:border-terracotta transition-colors" placeholder="+91 98765 43210">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm text-sand/80 mb-2">What speaks to your soul?</label>
+                            <select class="w-full bg-espresso/50 border border-mocha/50 rounded-xl px-4 py-3 text-cream focus:outline-none focus:border-terracotta transition-colors">
+                                <option value="">Choose your art style...</option>
+                                <option value="portrait">Portrait</option>
+                                <option value="landscape">Landscape</option>
+                                <option value="abstract">Abstract / Bohemian</option>
+                                <option value="botanical">Botanical</option>
+                                <option value="pet">Pet Portrait</option>
+                                <option value="other">Something Unique</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm text-sand/80 mb-2">Share your vision</label>
+                            <textarea rows="4" class="w-full bg-espresso/50 border border-mocha/50 rounded-xl px-4 py-3 text-cream placeholder-sand/40 focus:outline-none focus:border-terracotta transition-colors resize-none" placeholder="Tell me about your dream piece..."></textarea>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="checkbox" id="whatsapp-opt" class="mr-3 accent-terracotta w-4 h-4">
+                            <label for="whatsapp-opt" class="text-sm text-sand/80">Keep me updated via WhatsApp</label>
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-terracotta text-cream py-4 rounded-full font-medium hover:bg-terracotta-dark transition-colors duration-300">
+                            Send Love Letter ✨
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-espresso border-t border-mocha/30">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-2 mb-6 md:mb-0">
+                    <svg class="w-8 h-8 text-terracotta" viewBox="0 0 100 100" fill="currentColor">
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                        <circle cx="50" cy="50" r="8" fill="currentColor"/>
+                    </svg>
+                    <span class="font-serif text-xl text-cream">Soul Canvas</span>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <a href="#" class="w-10 h-10 bg-mocha/30 rounded-full flex items-center justify-center text-sand hover:bg-terracotta hover:text-cream transition-all duration-300">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z"/>
+                            <circle cx="12" cy="12" r="3.5"/>
+                            <circle cx="18.406" cy="5.594" r="1.44"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-mocha/30 rounded-full flex items-center justify-center text-sand hover:bg-terracotta hover:text-cream transition-all duration-300">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-mocha/30 rounded-full flex items-center justify-center text-sand hover:bg-terracotta hover:text-cream transition-all duration-300">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-mocha/30 text-center">
+                <p class="text-sand/60 text-sm">© 2024 Soul Canvas. Made with ♥ and a lot of chai.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lightbox -->
+    <div class="lightbox fixed inset-0 bg-espresso/95 z-50 flex items-center justify-center p-4" id="lightbox">
+        <button class="absolute top-6 right-6 text-cream hover:text-terracotta transition-colors" onclick="closeLightbox()">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+        <button class="absolute left-6 top-1/2 -translate-y-1/2 text-cream hover:text-terracotta transition-colors" onclick="lightboxNav(-1)">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+        </button>
+        <button class="absolute right-6 top-1/2 -translate-y-1/2 text-cream hover:text-terracotta transition-colors" onclick="lightboxNav(1)">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </button>
+        <div class="max-w-4xl w-full">
+            <img src="" alt="" class="w-full max-h-[75vh] object-contain rounded-2xl" id="lightbox-img">
+            <div class="text-center mt-6">
+                <h3 class="font-serif text-2xl text-cream" id="lightbox-title"></h3>
+                <p class="text-sand/80 text-sm mt-1" id="lightbox-desc"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Gallery data
+        const galleryItems = [
+            { img: 'https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=1200&q=80', title: 'Wild Spirit', desc: 'Bohemian Portrait • Acrylic on Canvas' },
+            { img: 'https://images.unsplash.com/photo-1549289524-06cf8837ace5?w=1200&q=80', title: 'Desert Dreams', desc: 'Landscape • Mixed Media' },
+            { img: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=1200&q=80', title: 'Autumn Whispers', desc: 'Abstract • Oil on Canvas' },
+            { img: 'https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?w=1200&q=80', title: 'Gentle Soul', desc: 'Portrait • Watercolor' },
+            { img: 'https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=1200&q=80', title: 'Earth Mother', desc: 'Abstract • Acrylic & Gold Leaf' },
+            { img: 'https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=1200&q=80', title: 'Moonlit Garden', desc: 'Botanical • Gouache' }
+        ];
+        
+        let currentLightbox = 0;
+        
+        // Navbar scroll
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+        
+        // Fade-in observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        
+        // Mobile menu
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuClose = document.getElementById('mobile-menu-close');
+        
+        mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.remove('translate-x-full'));
+        mobileMenuClose.addEventListener('click', () => mobileMenu.classList.add('translate-x-full'));
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.add('translate-x-full'));
+        });
+        
+        // Main carousel
+        let currentSlide = 0;
+        const track = document.getElementById('carousel-track');
+        const dots = document.querySelectorAll('.carousel-dot');
+        
+        function getSlideWidth() {
+            if (window.innerWidth >= 1024) return 33.333;
+            if (window.innerWidth >= 768) return 50;
+            return 100;
+        }
+        
+        function getMaxSlide() {
+            const slidesVisible = window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1;
+            return Math.max(0, 6 - slidesVisible);
+        }
+        
+        function updateCarousel() {
+            const slideWidth = getSlideWidth();
+            track.style.transform = `translateX(-${currentSlide * slideWidth}%)`;
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === Math.floor(currentSlide / (getMaxSlide() / 3)));
+            });
+        }
+        
+        function moveCarousel(dir) {
+            const maxSlide = getMaxSlide();
+            currentSlide = Math.max(0, Math.min(currentSlide + dir, maxSlide));
+            updateCarousel();
+        }
+        
+        function goToSlide(index) {
+            const maxSlide = getMaxSlide();
+            currentSlide = Math.min(index * Math.ceil(maxSlide / 3), maxSlide);
+            updateCarousel();
+        }
+        
+        window.addEventListener('resize', updateCarousel);
+        
+        // Testimonial carousel
+        let currentTestimonial = 0;
+        const testimonialTrack = document.getElementById('testimonial-track');
+        
+        function getTestimonialSlideWidth() {
+            if (window.innerWidth >= 1024) return 33.333;
+            if (window.innerWidth >= 768) return 50;
+            return 100;
+        }
+        
+        function moveTestimonialCarousel(dir) {
+            const maxSlide = window.innerWidth >= 1024 ? 0 : window.innerWidth >= 768 ? 1 : 2;
+            currentTestimonial = Math.max(0, Math.min(currentTestimonial + dir, maxSlide));
+            testimonialTrack.style.transform = `translateX(-${currentTestimonial * getTestimonialSlideWidth()}%)`;
+        }
+        
+        // Lightbox
+        function openLightbox(index) {
+            currentLightbox = index;
+            updateLightbox();
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        function lightboxNav(dir) {
+            currentLightbox = (currentLightbox + dir + galleryItems.length) % galleryItems.length;
+            updateLightbox();
+        }
+        
+        function updateLightbox() {
+            const item = galleryItems[currentLightbox];
+            document.getElementById('lightbox-img').src = item.img;
+            document.getElementById('lightbox-title').textContent = item.title;
+            document.getElementById('lightbox-desc').textContent = item.desc;
+        }
+        
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('lightbox')) closeLightbox();
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') lightboxNav(-1);
+            if (e.key === 'ArrowRight') lightboxNav(1);
+        });
+        
+        // Form
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for reaching out! ✨ This is a demo. In production, this would submit to your backend and notify you via WhatsApp.');
+        });
+        
+        // Auto-scroll carousel
+        setInterval(() => {
+            if (document.visibilityState === 'visible') {
+                const maxSlide = getMaxSlide();
+                currentSlide = currentSlide >= maxSlide ? 0 : currentSlide + 1;
+                updateCarousel();
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
